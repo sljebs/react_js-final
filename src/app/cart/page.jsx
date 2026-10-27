@@ -1,26 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import { useCart } from "@/context/CartContext";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart, increaseQuantity, decreaseQuantity } from "@/store/cartSlice";
 
 export default function CartPage() {
-  const { items: cartItems, removeFromCart, setQuantity } = useCart();
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
 
   // რაოდენობის გაზრდა (მაქსიმუმ 10)
-  const increaseQuantity = (id) => {
-    const item = cartItems.find((cartItem) => cartItem.id === id);
-    if (item && item.quantity < 10) setQuantity(id, item.quantity + 1);
+  const handleIncrease = (id, currentQuantity) => {
+    if (currentQuantity < 10) {
+      dispatch(increaseQuantity(id));
+    }
   };
 
   // რაოდენობის შემცირება (მინიმუმ 1)
-  const decreaseQuantity = (id) => {
-    const item = cartItems.find((cartItem) => cartItem.id === id);
-    if (item && item.quantity > 1) setQuantity(id, item.quantity - 1);
+  const handleDecrease = (id, currentQuantity) => {
+    if (currentQuantity > 1) {
+      dispatch(decreaseQuantity(id));
+    }
   };
 
   // პროდუქტის წაშლა კალათიდან
   const removeItem = (id) => {
-    removeFromCart(id);
+    dispatch(removeFromCart(id));
   };
 
   // საერთო თანხის გამოთვლა
@@ -29,7 +33,7 @@ export default function CartPage() {
     0
   );
 
-  if (cartItems.length === 0) {
+  if (!cartItems || cartItems.length === 0) {
     return (
       <main className="min-h-[70vh] bg-[#EDF4EE] px-4 py-10 sm:px-6">
         <div className="mx-auto max-w-5xl">
@@ -42,17 +46,17 @@ export default function CartPage() {
             </h1>
           </div>
           <div className="rounded-2xl border border-[#D4E2D6] bg-white px-6 py-14 text-center shadow-sm">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#E2EEE4] text-3xl text-[#315D42]" aria-hidden="true">
-            🛒
-          </div>
-          <h2 className="mb-3 text-2xl font-bold tracking-tight text-slate-900">Your Cart is Empty</h2>
-          <p className="mb-8 text-slate-600">Add a few products to get started.</p>
-          <Link
-            href="/products"
-            className="inline-flex rounded-xl bg-[#4C7A5A] px-6 py-3 font-semibold text-white transition hover:bg-[#1D4938] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#315D42]"
-          >
-            Browse Products
-          </Link>
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#E2EEE4] text-3xl text-[#315D42]" aria-hidden="true">
+              🛒
+            </div>
+            <h2 className="mb-3 text-2xl font-bold tracking-tight text-slate-900">Your Cart is Empty</h2>
+            <p className="mb-8 text-slate-600">Add a few products to get started.</p>
+            <Link
+              href="/products"
+              className="inline-flex rounded-xl bg-[#4C7A5A] px-6 py-3 font-semibold text-white transition hover:bg-[#1D4938] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#315D42]"
+            >
+              Browse Products
+            </Link>
           </div>
         </div>
       </main>
@@ -106,7 +110,7 @@ export default function CartPage() {
                 <span className="text-sm font-medium text-slate-500 sm:hidden">Quantity</span>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => decreaseQuantity(item.id)}
+                    onClick={() => handleDecrease(item.id, item.quantity)}
                     disabled={item.quantity <= 1}
                     aria-label={`Decrease quantity of ${item.title}`}
                     className="flex h-9 w-9 items-center justify-center rounded-full text-xl text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-300"
@@ -117,7 +121,7 @@ export default function CartPage() {
                     {item.quantity}
                   </span>
                   <button
-                    onClick={() => increaseQuantity(item.id)}
+                    onClick={() => handleIncrease(item.id, item.quantity)}
                     disabled={item.quantity >= 10}
                     aria-label={`Increase quantity of ${item.title}`}
                     className="flex h-9 w-9 items-center justify-center rounded-full text-xl text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-300"
@@ -143,7 +147,7 @@ export default function CartPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M10 11v6m4-6v6M5.5 7l1 13h11l1-13M9 7V4h6v3" />
                 </svg>
               </button>
-          </div>
+            </div>
           ))}
 
           <div className="flex flex-col gap-4 bg-[#DDEADE] px-5 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8">

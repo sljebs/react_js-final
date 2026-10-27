@@ -5,7 +5,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 const schema = yup.object({
   username: yup.string().required("Username is required"),
@@ -69,42 +68,57 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-[80vh] px-4">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md border border-gray-100">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800 text-center">Login</h1>
+    <main className="min-h-[80vh] bg-[#EDF4EE] px-4 py-12 sm:px-6">
+      <div className="mx-auto max-w-xl rounded-2xl border border-[#D4E2D6] bg-white p-8 shadow-sm sm:p-10">
+        <div className="mb-8 text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#53765E]">
+            Welcome Back
+          </p>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">
+            Log In
+          </h1>
+        </div>
 
         {error && (
-          <div className="bg-red-50 text-red-500 p-3 rounded-lg mb-4 text-sm text-center">
+          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-center text-sm font-medium text-red-800">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <label className="block text-sm font-medium text-slate-700">Username</label>
             <input
               type="text"
               {...register("username")}
               placeholder="e.g. johnd"
-              className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-xl border border-[#D4E2D6] px-4 py-3 text-slate-800 shadow-sm focus:border-[#4C7A5A] focus:outline-none focus:ring-1 focus:ring-[#4C7A5A]"
             />
-            <p className="text-red-500 text-xs mt-1">{errors.username?.message}</p>
+            {errors.username && (
+              <p className="mt-1 text-xs text-red-600">{errors.username.message}</p>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-slate-700">Password</label>
             <input
               type="password"
               {...register("password")}
               placeholder="e.g. m38rmF$"
-              className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-xl border border-[#D4E2D6] px-4 py-3 text-slate-800 shadow-sm focus:border-[#4C7A5A] focus:outline-none focus:ring-1 focus:ring-[#4C7A5A]"
             />
-            <p className="text-red-500 text-xs mt-1">{errors.password?.message}</p>
+            {errors.password && (
+              <p className="mt-1 text-xs text-red-600">{errors.password.message}</p>
+            )}
           </div>
 
-          <div className="flex items-center justify-between">
-            <label className="flex items-center text-sm text-gray-600">
-              <input type="checkbox" {...register("rememberMe")} className="mr-2 rounded text-blue-600" />
+          <div>
+            <label className="flex items-center text-sm text-slate-700">
+              <input
+                type="checkbox"
+                {...register("rememberMe")}
+                className="mr-2 rounded border-[#D4E2D6] text-[#4C7A5A] focus:ring-[#4C7A5A]"
+              />
               Remember me
             </label>
           </div>
@@ -112,12 +126,12 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition font-medium"
+            className="w-full rounded-xl bg-[#4C7A5A] px-6 py-3 font-semibold text-white transition hover:bg-[#315D42] focus:outline-none focus:ring-2 focus:ring-[#315D42] focus:ring-offset-2 disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
-    </div>
+    </main>
   );
 }
