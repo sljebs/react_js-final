@@ -7,6 +7,8 @@ import { removeFromCart, increaseQuantity, decreaseQuantity } from "@/store/cart
 export default function CartPage() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+  const totalPrice = useSelector((state) => state.cart.totalAmount);
 
   // რაოდენობის გაზრდა (მაქსიმუმ 10)
   const handleIncrease = (id, currentQuantity) => {
@@ -27,12 +29,6 @@ export default function CartPage() {
     dispatch(removeFromCart(id));
   };
 
-  // საერთო თანხის გამოთვლა
-  const totalPrice = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
   if (!cartItems || cartItems.length === 0) {
     return (
       <main className="min-h-[70vh] bg-[#EDF4EE] px-4 py-10 sm:px-6">
@@ -44,6 +40,9 @@ export default function CartPage() {
             <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">
               Shopping Cart
             </h1>
+            <p className="mt-2 text-sm text-slate-600">
+              {totalQuantity} {totalQuantity === 1 ? "item" : "items"} in your cart
+            </p>
           </div>
           <div className="rounded-2xl border border-[#D4E2D6] bg-white px-6 py-14 text-center shadow-sm">
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#E2EEE4] text-3xl text-[#315D42]" aria-hidden="true">
@@ -155,7 +154,9 @@ export default function CartPage() {
               Continue shopping
             </Link>
             <div className="flex items-center justify-between gap-6 sm:justify-end">
-              <span className="font-medium text-slate-600">Subtotal</span>
+              <span className="font-medium text-slate-600">
+                Total ({totalQuantity} {totalQuantity === 1 ? "item" : "items"})
+              </span>
               <span className="text-2xl font-bold tabular-nums text-slate-900">${totalPrice.toFixed(2)}</span>
             </div>
           </div>

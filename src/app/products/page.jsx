@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useCart } from "@/context/CartContext";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/store/cartSlice";
 
 export default function ProductsPage() {
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [listError, setListError] = useState(null);
@@ -14,7 +15,7 @@ export default function ProductsPage() {
   const [addedProductId, setAddedProductId] = useState(null);
 
   function handleAddToCart(product) {
-    addToCart(product);
+    dispatch(addToCart(product));
     setAddedProductId(product.id);
     window.setTimeout(() => setAddedProductId(null), 1200);
   }

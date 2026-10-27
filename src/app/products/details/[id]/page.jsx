@@ -3,8 +3,11 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/store/cartSlice";
 
 export default function ProductDetailPage() {
+  const dispatch = useDispatch();
   const params = useParams();
   const id = params?.id || "1";
 
@@ -120,7 +123,11 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          <button className="bg-[#4C7A5A] text-white py-3 px-6 rounded-xl hover:bg-[#1D4938] transition font-medium w-full">
+          <button
+            type="button"
+            onClick={() => dispatch(addToCart(product))}
+            className="w-full rounded-xl bg-[#4C7A5A] px-6 py-3 font-medium text-white transition hover:bg-[#1D4938] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#315D42]"
+          >
             Add to Cart
           </button>
         </div>
